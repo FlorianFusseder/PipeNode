@@ -2,32 +2,39 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+#include <sensor_msgs/msg/image.hpp>
 
 class BridgeNode: public rclcpp::node::Node
 {
     public:
         BridgeNode() : Node("BridgeNode")
         {
-            publisher = this->create_publisher<std_msgs::msg::String>("chatter1");
-            subscribtion = this->create_subscription<std_msgs::msg::String>("chatter2", 
-                std::bind(&BridgeNode::Sub_Callback, this, std::placeholders::_1));
+            publisher = this->create_publisher<sensor_msgs::msg::Image>
+                ("/results/segmentation");
+            std::weak_ptr<std::remove_pointer<decltype(publisher.get())>::type>
+                captured_publisher = publisher;
+            subscribtion = this->create_subscription<sensor_msgs::msg::Image> (
+                "/cv_camera/image_raw", 
+                std::bind(&BridgeNode::Sub_Callback, this, std::placeholders::_1)
+                );
         } 
     private:
-        void Sub_Callback(std_msgs::msg::String::SharedPtr msg)
+        void Sub_Callback(sensor_msgs::msg::Image::SharedPtr msg)
         {
-            std::cout << "I got: " + msg->data << std::endl;
+            std::cout << "I got a picture" << std::endl;
             Pub_Callback(msg);
         }
 
-        void Pub_Callback(std_msgs::msg::String::SharedPtr msg)
+        void Pub_Callback(sensor_msgs::msg::Image::SharedPtr msg)
         {
-            std::cout <<"I publish: " + msg->data << std::endl;
-            publisher->publish(msg);
+            msg->is_bigendian = false;
+            std::cout <<"I publish: " << std::endl;
+            // publisher->publish(msg);
         }
 
 
-        rclcpp::subscription::Subscription<std_msgs::msg::String>::SharedPtr subscribtion;
-        rclcpp::publisher::Publisher<std_msgs::msg::String>::SharedPtr publisher;
+        rclcpp::subscription::Subscription<sensor_msgs::msg::Image>::SharedPtr subscribtion;
+        rclcpp::publisher::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher;
 };
 
 int main(int argc, char* argv[]){
