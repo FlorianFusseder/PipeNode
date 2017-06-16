@@ -1,28 +1,30 @@
 #include <iostream>
+#include <memory>
 
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/string.hpp>
-#include <sensor_msgs/msg/image.hpp>
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+#include "sensor_msgs/msg/image.hpp"
 
 class BridgeNode: public rclcpp::node::Node
 {
     public:
-        BridgeNode() : Node("BridgeNode")
+        BridgeNode() : Node("BridgeNode", true)
         {
-            publisher = this->create_publisher<sensor_msgs::msg::Image>
-                ("/results/segmentation");
-            std::weak_ptr<std::remove_pointer<decltype(publisher.get())>::type>
-                captured_publisher = publisher;
-            subscribtion = this->create_subscription<sensor_msgs::msg::Image> (
-                "/cv_camera/image_raw", 
-                std::bind(&BridgeNode::Sub_Callback, this, std::placeholders::_1)
-                );
+            auto qos = rmw_qos_profile_sensor_data;
+            // publisher = this->create_publisher<sensor_msgs::msg::Image>
+                // ("/results/segmentation", qos);
+            // std::weak_ptr<std::remove_pointer<decltype(publisher.get())>::type>
+                // captured_publisher = publisher;
+            // subscribtion = this->create_subscription<sensor_msgs::msg::Image> (
+                // "/cv_camera/image_raw", 
+                // std::bind(&BridgeNode::Sub_Callback, this, std::placeholders::_1)
+                // , qos);
         } 
     private:
         void Sub_Callback(sensor_msgs::msg::Image::SharedPtr msg)
         {
             std::cout << "I got a picture" << std::endl;
-            Pub_Callback(msg);
+            // Pub_Callback(msg);
         }
 
         void Pub_Callback(sensor_msgs::msg::Image::SharedPtr msg)
@@ -33,8 +35,8 @@ class BridgeNode: public rclcpp::node::Node
         }
 
 
-        rclcpp::subscription::Subscription<sensor_msgs::msg::Image>::SharedPtr subscribtion;
-        rclcpp::publisher::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher;
+        rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscribtion;
+        rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher;
 };
 
 int main(int argc, char* argv[]){
