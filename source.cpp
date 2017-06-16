@@ -11,14 +11,14 @@ class BridgeNode: public rclcpp::node::Node
         BridgeNode() : Node("BridgeNode", true)
         {
             auto qos = rmw_qos_profile_sensor_data;
-            // publisher = this->create_publisher<sensor_msgs::msg::Image>
-                // ("/results/segmentation", qos);
-            // std::weak_ptr<std::remove_pointer<decltype(publisher.get())>::type>
-                // captured_publisher = publisher;
-            // subscribtion = this->create_subscription<sensor_msgs::msg::Image> (
-                // "/cv_camera/image_raw", 
-                // std::bind(&BridgeNode::Sub_Callback, this, std::placeholders::_1)
-                // , qos);
+            publisher = this->create_publisher<sensor_msgs::msg::Image>
+                ("/results/segmentation", qos);
+            std::weak_ptr<std::remove_pointer<decltype(publisher.get())>::type>
+                captured_publisher = publisher;
+            subscribtion = this->create_subscription<sensor_msgs::msg::Image> (
+                "/image", 
+                std::bind(&BridgeNode::Sub_Callback, this, std::placeholders::_1)
+                , qos);
         } 
     private:
         void Sub_Callback(sensor_msgs::msg::Image::SharedPtr msg)
@@ -33,7 +33,6 @@ class BridgeNode: public rclcpp::node::Node
             std::cout <<"I publish: " << std::endl;
             // publisher->publish(msg);
         }
-
 
         rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subscribtion;
         rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher;

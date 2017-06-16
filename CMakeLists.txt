@@ -8,9 +8,9 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-add_executable(source source.cpp)
-ament_target_dependencies(source rclcpp std_msgs sensor_msgs)
+add_executable(bridge_test source.cpp)
+ament_target_dependencies(bridge_test rclcpp std_msgs sensor_msgs)
 
-install(TARGETS source DESTINATION bin)
+install(TARGETS bridge_test DESTINATION bin)
 
 ament_package()
