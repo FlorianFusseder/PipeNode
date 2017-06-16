@@ -1,0 +1,4 @@
+#!/bin/bash
+killall image_view_node
+killall camera_node
+killall semantic_segmentation

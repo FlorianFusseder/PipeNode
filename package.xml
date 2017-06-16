@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
-  <name>bridgetest</name>
+  <name>semantic_segmentation</name>
   <version>0.0.0</version>
   <description>Examples of a ros2 node that passes a message from one node to another</description>
   <maintainer email="fussederflorian@gmail.com">Florian Fusseder</maintainer>
@@ -11,9 +11,11 @@
 
   <build_depend>rclcpp</build_depend>
   <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
 
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

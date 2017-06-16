@@ -1,0 +1,4 @@
+#!/bin/bash
+camera_node &
+semantic_segmentation &
+image_view_node &
