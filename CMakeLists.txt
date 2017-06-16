@@ -8,6 +8,8 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 
 add_executable(source source.cpp)
+install(TARGETS source DESTINATION bin) 
+	
 ament_target_dependencies(source rclcpp std_msgs)
 
 ament_package()
